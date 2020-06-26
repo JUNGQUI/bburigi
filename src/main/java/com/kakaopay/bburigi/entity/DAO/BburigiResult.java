@@ -1,6 +1,5 @@
-package com.kakaopay.bburigi.entity;
+package com.kakaopay.bburigi.entity.DAO;
 
-import com.kakaopay.bburigi.service.BburigiCommonInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

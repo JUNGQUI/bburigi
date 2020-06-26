@@ -1,14 +1,20 @@
 package com.kakaopay.bburigi.service;
 
-import com.kakaopay.bburigi.entity.BburigiResult;
+import com.kakaopay.bburigi.entity.DAO.BburigiResult;
+import com.kakaopay.bburigi.entity.DAO.BburigiSource;
+import com.kakaopay.bburigi.entity.DTO.SourceDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Transactional
 public interface ISourceService {
 
-    String createSource(long owner, String room, long price, long count, List<BburigiResult> resultList);
+    void createSource(String token, long owner, String room, long price, long count, Date expire,
+                        List<BburigiResult> resultList);
 
     String getUniqueToken();
+
+    SourceDTO getSource(String token, long owner);
 }

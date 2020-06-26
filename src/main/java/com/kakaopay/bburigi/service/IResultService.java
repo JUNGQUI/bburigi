@@ -1,11 +1,15 @@
 package com.kakaopay.bburigi.service;
 
-import com.kakaopay.bburigi.entity.BburigiResult;
+import com.kakaopay.bburigi.entity.DAO.BburigiResult;
+import com.kakaopay.bburigi.entity.DTO.ResultDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Transactional
 public interface IResultService {
-    List<BburigiResult> createResult(long ownerUser, String room, long price, long count);
+    List<BburigiResult> createResult(String token, long sourceUser, String room, long price, long count, Date date);
+
+    List<ResultDTO> getAvailableResult(String token, long requestUser, String room, Date date);
 }

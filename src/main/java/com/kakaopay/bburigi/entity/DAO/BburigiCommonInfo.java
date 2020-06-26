@@ -1,4 +1,4 @@
-package com.kakaopay.bburigi.service;
+package com.kakaopay.bburigi.entity.DAO;
 
 import lombok.Data;
 
@@ -17,4 +17,11 @@ public class BburigiCommonInfo {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date expire;
+
+    public BburigiCommonInfo(long ownerUser, String room, long price, Date expire) {
+        this.ownerUser = ownerUser;
+        this.room = room;
+        this.price = price;
+        this.expire = expire;
+    }
 }

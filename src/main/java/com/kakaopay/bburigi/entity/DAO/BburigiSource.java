@@ -1,6 +1,5 @@
-package com.kakaopay.bburigi.entity;
+package com.kakaopay.bburigi.entity.DAO;
 
-import com.kakaopay.bburigi.service.BburigiCommonInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,4 +23,12 @@ public class BburigiSource {
 
     @OneToMany
     private List<BburigiResult> result;
+
+    public BburigiSource(){}
+    public BburigiSource(String token, long count, BburigiCommonInfo bburigiCommonInfo, List<BburigiResult> result) {
+        this.token = token;
+        this.count = count;
+        this.commonInfo = bburigiCommonInfo;
+        this.result = result;
+    }
 }
