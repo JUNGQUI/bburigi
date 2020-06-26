@@ -9,7 +9,7 @@ import java.util.List;
 
 @Transactional
 public interface IResultService {
-    List<BburigiResult> createResult(String token, long sourceUser, String room, long price, long count, Date date);
+    List<BburigiResult> createResult(String token, Long sourceUser, String room, long price, long count, Date date);
 
-    List<ResultDTO> getAvailableResult(String token, long requestUser, String room, Date date);
+    ResultDTO getAvailableResult(String token, Long requestUser, String room, Date date);
 }

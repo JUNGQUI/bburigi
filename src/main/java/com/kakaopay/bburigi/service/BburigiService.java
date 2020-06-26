@@ -1,11 +1,13 @@
 package com.kakaopay.bburigi.service;
 
 import com.kakaopay.bburigi.entity.DAO.BburigiResult;
+import com.kakaopay.bburigi.entity.DTO.SourceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.*;
 
 @Service
 public class BburigiService implements IBburigiService {
@@ -20,7 +22,19 @@ public class BburigiService implements IBburigiService {
     }
 
     @Override
-    public String createBburigi(long owner, String room, long price, long count) {
+    public String createBburigi(Long owner, String room, long price, long count) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        Callable<String> task = sourceService::getUniqueToken;
+        Future<String> future = executorService.submit(task);
+
+        try {
+            // token 발급은 최대 3초
+            future.get(3000, TimeUnit.MILLISECONDS);
+        } catch (Exception ex) {
+            return null;
+        }
+
         String token = sourceService.getUniqueToken();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, 10);

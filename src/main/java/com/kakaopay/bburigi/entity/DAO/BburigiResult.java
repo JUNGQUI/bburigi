@@ -15,8 +15,16 @@ public class BburigiResult {
     @GeneratedValue
     private Long id;
     private String token;
-    private long sourceUser;
+    private Long sourceUser;
 
     @Embedded
     private BburigiCommonInfo commonInfo;
+
+    public BburigiResult() {}
+
+    public BburigiResult(String token, Long sourceUser, BburigiCommonInfo commonInfo) {
+        this.token = token;
+        this.sourceUser = sourceUser;
+        this.commonInfo = commonInfo;
+    }
 }

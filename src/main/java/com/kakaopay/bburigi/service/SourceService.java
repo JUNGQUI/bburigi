@@ -5,6 +5,7 @@ import com.kakaopay.bburigi.entity.DAO.BburigiResult;
 import com.kakaopay.bburigi.entity.DAO.BburigiSource;
 import com.kakaopay.bburigi.entity.DTO.ResultDTO;
 import com.kakaopay.bburigi.entity.DTO.SourceDTO;
+import com.kakaopay.bburigi.service.repository.IDynamicRepository;
 import com.kakaopay.bburigi.service.repository.SourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,16 @@ import java.util.List;
 public class SourceService implements ISourceService {
 
     private final SourceRepository sourceRepository;
+    private final IDynamicRepository dynamicRepository;
 
     @Autowired
-    public SourceService(SourceRepository sourceRepository) {
+    public SourceService(SourceRepository sourceRepository, IDynamicRepository dynamicRepository) {
         this.sourceRepository = sourceRepository;
+        this.dynamicRepository = dynamicRepository;
     }
 
     @Override
-    public void createSource(String token, long owner, String room, long price, long count, Date expire,
+    public void createSource(String token, Long owner, String room, long price, long count, Date expire,
                                List<BburigiResult> resultList) {
         BburigiCommonInfo commonInfo = new BburigiCommonInfo(owner, room, price, expire);
         BburigiSource source = new BburigiSource(token, count, commonInfo, resultList);
@@ -46,9 +49,8 @@ public class SourceService implements ISourceService {
     }
 
     @Override
-    public SourceDTO getSource(String token, long owner) {
-        BburigiSource bburigiSource = sourceRepository
-                .findByTokenAndCommonInfo_OwnerUserAndCommonInfo_ExpireAfter(token, owner, new Date());
+    public SourceDTO getSource(String token, Long owner) {
+        BburigiSource bburigiSource = dynamicRepository.findAvailableSource(token, owner, new Date());
 
         if (bburigiSource == null) {
             return null;
@@ -59,13 +61,15 @@ public class SourceService implements ISourceService {
         long paidPrice = 0L;
 
         for (BburigiResult resultDAO : bburigiSource.getResult()) {
-            ResultDTO resultDTO = new ResultDTO(
-                    resultDAO.getCommonInfo().getPrice(),
-                    resultDAO.getCommonInfo().getOwnerUser()
-            );
+            if (resultDAO.getCommonInfo().getOwnerUser() != -1L) {
+                ResultDTO resultDTO = new ResultDTO(
+                        resultDAO.getCommonInfo().getPrice(),
+                        resultDAO.getCommonInfo().getOwnerUser()
+                );
 
-            paidPrice += resultDAO.getCommonInfo().getPrice();
-            resultDTOList.add(resultDTO);
+                paidPrice += resultDAO.getCommonInfo().getPrice();
+                resultDTOList.add(resultDTO);
+            }
         }
 
         Calendar calendar = Calendar.getInstance();

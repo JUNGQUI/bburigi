@@ -11,10 +11,10 @@ import java.util.List;
 @Transactional
 public interface ISourceService {
 
-    void createSource(String token, long owner, String room, long price, long count, Date expire,
+    void createSource(String token, Long owner, String room, long price, long count, Date expire,
                         List<BburigiResult> resultList);
 
     String getUniqueToken();
 
-    SourceDTO getSource(String token, long owner);
+    SourceDTO getSource(String token, Long owner);
 }

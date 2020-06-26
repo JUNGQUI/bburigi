@@ -12,13 +12,15 @@ import java.util.Date;
 public class BburigiCommonInfo {
 
     private long price;
-    private long ownerUser;
+    private Long ownerUser;
     private String room;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date expire;
 
-    public BburigiCommonInfo(long ownerUser, String room, long price, Date expire) {
+    public BburigiCommonInfo() {}
+
+    public BburigiCommonInfo(Long ownerUser, String room, long price, Date expire) {
         this.ownerUser = ownerUser;
         this.room = room;
         this.price = price;

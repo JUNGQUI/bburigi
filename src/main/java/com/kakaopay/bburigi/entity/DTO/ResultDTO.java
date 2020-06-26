@@ -6,11 +6,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 public class ResultDTO {
-    private long paidPrice;
-    private long owner;
+    private long price;
+    private Long owner;
 
-    public ResultDTO(long paidPrice, long owner) {
-        this.paidPrice = paidPrice;
+    public ResultDTO(long price, Long owner) {
+        this.price = price;
         this.owner = owner;
     }
 }

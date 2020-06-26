@@ -3,6 +3,7 @@ package com.kakaopay.bburigi.service;
 import com.kakaopay.bburigi.entity.DAO.BburigiCommonInfo;
 import com.kakaopay.bburigi.entity.DAO.BburigiResult;
 import com.kakaopay.bburigi.entity.DTO.ResultDTO;
+import com.kakaopay.bburigi.service.repository.IDynamicRepository;
 import com.kakaopay.bburigi.service.repository.ResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,16 @@ import java.util.List;
 public class ResultService implements IResultService {
 
     private final ResultRepository resultRepository;
+    private final IDynamicRepository dynamicRepository;
 
     @Autowired
-    public ResultService(ResultRepository resultRepository) {
+    public ResultService(ResultRepository resultRepository, IDynamicRepository dynamicRepository) {
         this.resultRepository = resultRepository;
+        this.dynamicRepository = dynamicRepository;
     }
 
     @Override
-    public List<BburigiResult> createResult(String token, long sourceUser, String room, long price, long count, Date date) {
+    public List<BburigiResult> createResult(String token, Long sourceUser, String room, long price, long count, Date date) {
         List<BburigiResult> resultList = new ArrayList<>();
 
         long remainPrice = price;
@@ -38,10 +41,7 @@ public class ResultService implements IResultService {
 
             BburigiCommonInfo commonInfo = new BburigiCommonInfo(-1L, room, resultPrice, date);
 
-            BburigiResult result = new BburigiResult();
-            result.setSourceUser(sourceUser);
-            result.setToken(token);
-            result.setCommonInfo(commonInfo);
+            BburigiResult result = new BburigiResult(token, sourceUser, commonInfo);
 
             resultRepository.save(result);
 
@@ -52,8 +52,23 @@ public class ResultService implements IResultService {
     }
 
     @Override
-    public List<ResultDTO> getAvailableResult(String token, long requestUser, String room, Date date) {
-        return null;
+    public ResultDTO getAvailableResult(String token, Long requestUser, String room, Date date) {
+        List<BburigiResult> resultList = dynamicRepository.findAvailableResult(token, requestUser, room, date);
+        ResultDTO resultDTO = null;
+
+        for (BburigiResult resultDAO : resultList) {
+            resultDTO = new ResultDTO(resultDAO.getCommonInfo().getPrice(), requestUser);
+
+            BburigiCommonInfo commonInfo = resultDAO.getCommonInfo();
+            commonInfo.setOwnerUser(requestUser);
+            resultDAO.setCommonInfo(commonInfo);
+
+            resultRepository.save(resultDAO);
+
+            break;
+        }
+
+        return resultDTO;
     }
 
     private long calculate(long count, long remainPrice) {
