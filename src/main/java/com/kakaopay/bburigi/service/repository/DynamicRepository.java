@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class DynamicRepository implements IDynamicRepository {
+class DynamicRepository implements IDynamicRepository {
 
     private final ResultRepository resultRepository;
     private final SourceRepository sourceRepository;

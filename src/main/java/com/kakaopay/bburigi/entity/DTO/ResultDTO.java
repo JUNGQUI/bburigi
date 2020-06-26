@@ -1,9 +1,9 @@
 package com.kakaopay.bburigi.entity.DTO;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
+@Getter
 @EqualsAndHashCode
 public class ResultDTO {
     private long price;

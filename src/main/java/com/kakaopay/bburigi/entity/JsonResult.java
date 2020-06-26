@@ -1,9 +1,9 @@
 package com.kakaopay.bburigi.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class JsonResult {
     private boolean success;
     private String message;
@@ -11,22 +11,21 @@ public class JsonResult {
     private Object data;
 
     public static JsonResult success(Object data) {
-        JsonResult result = new JsonResult();
-        result.setSuccess(true);
-        result.setData(data);
-        return result;
+        return new JsonResult(true, data, null);
     }
 
     public static JsonResult success() {
-        JsonResult result = new JsonResult();
-        result.setSuccess(true);
-        return result;
+        return new JsonResult(true, null, null);
     }
 
     public static JsonResult failure(String message) {
-        JsonResult result = new JsonResult();
-        result.setSuccess(false);
-        result.setMessage(message);
-        return result;
+        return new JsonResult(false, null, message);
+    }
+
+    public JsonResult () {}
+    public JsonResult (boolean success, Object data, String message) {
+        this.success = success;
+        this.data = data;
+        this.message = message;
     }
 }

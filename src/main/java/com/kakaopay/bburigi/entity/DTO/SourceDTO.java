@@ -1,12 +1,12 @@
 package com.kakaopay.bburigi.entity.DTO;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
 @EqualsAndHashCode
 public class SourceDTO {
     private Date createdDate;

@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ResultService implements IResultService {
+class ResultService implements IResultService {
 
     private final ResultRepository resultRepository;
     private final IDynamicRepository dynamicRepository;
@@ -42,12 +42,10 @@ public class ResultService implements IResultService {
             BburigiCommonInfo commonInfo = new BburigiCommonInfo(-1L, room, resultPrice, date);
 
             BburigiResult result = new BburigiResult(token, sourceUser, commonInfo);
-
-            resultRepository.save(result);
-
             resultList.add(result);
         }
 
+        resultRepository.saveAll(resultList);
         return resultList;
     }
 
@@ -58,10 +56,7 @@ public class ResultService implements IResultService {
 
         for (BburigiResult resultDAO : resultList) {
             resultDTO = new ResultDTO(resultDAO.getCommonInfo().getPrice(), requestUser);
-
-            BburigiCommonInfo commonInfo = resultDAO.getCommonInfo();
-            commonInfo.setOwnerUser(requestUser);
-            resultDAO.setCommonInfo(commonInfo);
+            resultDAO.changeOwner(requestUser);
 
             resultRepository.save(resultDAO);
 

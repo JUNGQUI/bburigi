@@ -1,14 +1,14 @@
 package com.kakaopay.bburigi.entity.DAO;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 
-@Data
-@EqualsAndHashCode
+@Getter
 @Entity
+@EqualsAndHashCode
 public class BburigiResult {
 
     @Id
@@ -26,5 +26,9 @@ public class BburigiResult {
         this.token = token;
         this.sourceUser = sourceUser;
         this.commonInfo = commonInfo;
+    }
+
+    public void changeOwner (Long ownerUser) {
+        this.commonInfo.changeOwner(ownerUser);
     }
 }

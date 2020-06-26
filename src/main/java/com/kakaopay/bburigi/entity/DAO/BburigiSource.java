@@ -1,12 +1,12 @@
 package com.kakaopay.bburigi.entity.DAO;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
+@Getter
 @Entity
 @EqualsAndHashCode
 public class BburigiSource {

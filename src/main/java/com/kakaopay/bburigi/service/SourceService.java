@@ -10,14 +10,16 @@ import com.kakaopay.bburigi.service.repository.SourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.*;
 
 @Service
-public class SourceService implements ISourceService {
+class SourceService implements ISourceService {
 
     private final SourceRepository sourceRepository;
     private final IDynamicRepository dynamicRepository;
@@ -31,6 +33,9 @@ public class SourceService implements ISourceService {
     @Override
     public void createSource(String token, Long owner, String room, long price, long count, Date expire,
                                List<BburigiResult> resultList) {
+
+        Assert.isTrue(resultList != null && resultList.size() > 0, "뿌리기 생성 실패, 분배 금액이 없습니다.");
+
         BburigiCommonInfo commonInfo = new BburigiCommonInfo(owner, room, price, expire);
         BburigiSource source = new BburigiSource(token, count, commonInfo, resultList);
 
@@ -39,11 +44,19 @@ public class SourceService implements ISourceService {
 
     @Override
     public String getUniqueToken() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        Callable<String> task = this::searchUniqueToken;
+        Future<String> future = executorService.submit(task);
+
         String token;
 
-        do {
-            token = RandomStringUtils.random(3, true, true);
-        } while (sourceRepository.findByToken(token) != null);
+        try {
+            // token 발급은 최대 3초
+            token = future.get(3000, TimeUnit.MILLISECONDS);
+        } catch (Exception ex) {
+            return null;
+        }
 
         return token;
     }
@@ -76,10 +89,23 @@ public class SourceService implements ISourceService {
         calendar.setTime(bburigiSource.getCommonInfo().getExpire());
         calendar.add(Calendar.DAY_OF_MONTH, -7);
 
-        SourceDTO sourceDTO = new SourceDTO(
-                calendar.getTime(), bburigiSource.getCommonInfo().getPrice(), paidPrice, resultDTOList
-        );
+        return new SourceDTO(calendar.getTime(), bburigiSource.getCommonInfo().getPrice(), paidPrice, resultDTOList);
+    }
 
-        return sourceDTO;
+    private String searchUniqueToken() {
+        String token;
+
+        do {
+            token = RandomStringUtils.random(3, true, true);
+        } while (sourceRepository.findByToken(token) != null);
+
+        // method timeout test code
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        return token;
     }
 }
