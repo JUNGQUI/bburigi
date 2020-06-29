@@ -1,4 +1,4 @@
-package com.kakaopay.bburigi.entity;
+package com.kakaopay.bburigi.entity.common;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

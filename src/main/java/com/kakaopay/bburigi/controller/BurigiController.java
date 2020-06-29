@@ -4,7 +4,7 @@ import com.kakaopay.bburigi.entity.DTO.RequestToken;
 import com.kakaopay.bburigi.entity.DTO.ResultDTO;
 import com.kakaopay.bburigi.entity.DTO.SourceDTO;
 import com.kakaopay.bburigi.entity.DTO.RequestSource;
-import com.kakaopay.bburigi.entity.JsonResult;
+import com.kakaopay.bburigi.entity.common.JsonResult;
 import com.kakaopay.bburigi.service.IBburigiService;
 import com.kakaopay.bburigi.service.IResultService;
 import com.kakaopay.bburigi.service.ISourceService;
